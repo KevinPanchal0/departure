@@ -14,12 +14,6 @@ class ChapterDetailPage extends StatefulWidget {
 }
 
 class _ChapterDetailPageState extends State<ChapterDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-    loadJson();
-  }
-
   late String verseJsonEnglish;
 
   Map<String, dynamic> verseJsonMapEnglish = {};
@@ -29,6 +23,8 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
 
   Map<String, dynamic> verseJsonMapHindi = {};
   Map<String, dynamic> verseMapHindi = {};
+
+  Map<String, dynamic>? chapterVersesEorG;
 
   void loadJson() async {
     verseJsonEnglish =
@@ -46,17 +42,25 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadJson();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    Map<String, dynamic> chapterVerseEorH =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final language =
         Provider.of<LanguageProvider>(context).languageModel.language;
 
-    Map<String, dynamic>? chapterVerses = (language == 'english')
-        ? verseMapEnglish['${chapterVerseEorH['chapter_number']}']
-        : verseMapHindi['${chapterVerseEorH['chapter_number']}'];
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final chapter = args['chapter'] as Map<String, dynamic>;
+    final chapterNumber = args['chapterNumber'] as String;
+
+    chapterVersesEorG = (language == 'english')
+        ? verseMapEnglish[chapterNumber]
+        : verseMapHindi[chapterNumber];
     print(language);
-    print('Chapter Verses: $chapterVerses');
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -85,7 +89,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                       ),
                       centerTitle: true,
                       title: Text(
-                        'Chapter Number: ${chapterVerseEorH['chapter_number']}',
+                        'Chapter Number: $chapterNumber',
                         style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 25,
@@ -99,7 +103,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                         padding: const EdgeInsets.all(8.0),
                         child: Center(
                           child: Text(
-                            '${chapterVerseEorH['name']}',
+                            '${chapter['name']}',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
@@ -129,7 +133,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
-                        '${chapterVerseEorH['chapter_summary']}\n',
+                        '${chapter['chapter_summary']}\n',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,
@@ -145,18 +149,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          if (chapterVerses == null) {
-                            return const ListTile(
-                              title: Text(
-                                'Verses Not Found',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                ),
-                              ),
-                            );
-                          }
-
-                          final verse = chapterVerses['${index + 1}'];
+                          final verse = chapterVersesEorG!['${index + 1}'];
                           return (verse == null)
                               ? const ListTile(
                                   title: Text('Verse Not Found'),
@@ -174,7 +167,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                                   },
                                 );
                         },
-                        childCount: chapterVerses?.length ?? 0,
+                        childCount: chapterVersesEorG?.length ?? 0,
                       ),
                     ),
                   ],

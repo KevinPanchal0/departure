@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, i) {
-                      final selectedChapter = (language == 'english')
+                      final chapter = (language == 'english')
                           ? chapterMapEnglish['${i + 1}']
                           : chapterMapHindi['${i + 1}'];
 
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                             width: 25,
                             color: Colors.red.shade100,
                             child: Text(
-                              "${selectedChapter['chapter_number']}",
+                              "${chapter['chapter_number']}",
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontSize: 15,
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           title: Text(
-                            "${selectedChapter['name']}",
+                            "${chapter['name']}",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 10,
                               ),
                               Text(
-                                "${selectedChapter['verses_count']}",
+                                "${chapter['verses_count']}",
                               ),
                             ],
                           ),
@@ -131,23 +131,29 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               Navigator.of(context).pushNamed(
                                 'detail_page',
-                                arguments: (language == 'english')
-                                    ? chapterMapEnglish['${i + 1}']
-                                    : chapterMapHindi['${i + 1}'],
+                                arguments: {
+                                  'chapter': chapter,
+                                  'chapterNumber': chapter['chapter_number'],
+                                },
                               );
                             },
                             icon: const Icon(Icons.chevron_right),
                           ),
                           onTap: () {
-                            Navigator.of(context).pushNamed('detail_page',
-                                arguments: (language == 'english')
-                                    ? chapterMapEnglish['${i + 1}']
-                                    : chapterMapHindi['${i + 1}']);
+                            Navigator.of(context).pushNamed(
+                              'detail_page',
+                              arguments: {
+                                'chapter': chapter,
+                                'chapterNumber': chapter['chapter_number'],
+                              },
+                            );
                           },
                         ),
                       );
                     },
-                    childCount: chapterMapEnglish.length,
+                    childCount: (language == 'english')
+                        ? chapterMapEnglish.length
+                        : chapterMapHindi.length,
                   ),
                 ),
               ],
