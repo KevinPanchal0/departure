@@ -143,8 +143,14 @@ class _HomePageState extends State<HomePage> {
                             Navigator.of(context).pushNamed(
                               'detail_page',
                               arguments: {
-                                'chapter': chapter,
-                                'chapterNumber': chapter['chapter_number'],
+                                'chapter': (language == 'english')
+                                    ? chapterMapEnglish['${i + 1}']
+                                    : chapterMapHindi['${i + 1}'],
+                                'chapterNumber': (language == 'english')
+                                    ? chapterMapEnglish['${i + 1}']
+                                        ['chapter_number']
+                                    : chapterMapHindi['${i + 1}']
+                                        ['chapter_number'],
                               },
                             );
                           },

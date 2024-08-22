@@ -36,19 +36,23 @@ class _VerseDetailPageState extends State<VerseDetailPage> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  const Text(
-                    'TRANSLITERATION',
-                    style: TextStyle(
-                      fontSize: 25,
-                    ),
-                  ),
-                  Text(
-                    verseInfo['transliteration'],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
+                  (verseInfo['transliteration'] == null)
+                      ? Container()
+                      : const Text(
+                          'TRANSLITERATION',
+                          style: TextStyle(
+                            fontSize: 25,
+                          ),
+                        ),
+                  (verseInfo['transliteration'] == null)
+                      ? Container()
+                      : Text(
+                          verseInfo['transliteration'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
                 ],
               ),
             ),

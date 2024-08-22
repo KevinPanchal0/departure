@@ -24,21 +24,28 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
   Map<String, dynamic> verseJsonMapHindi = {};
   Map<String, dynamic> verseMapHindi = {};
 
-  Map<String, dynamic>? chapterVersesEorG;
-
+  Map? chapterVersesEorG = {};
   void loadJson() async {
-    verseJsonEnglish =
-        await rootBundle.loadString('assets/JSON/bhagvad_gita_english.json');
+    await rootBundle
+        .loadString('assets/JSON/bhagvad_gita_english.json')
+        .then((value) {
+      verseJsonEnglish = value;
+      verseJsonMapEnglish = jsonDecode(verseJsonEnglish);
+      verseMapEnglish = verseJsonMapEnglish['verses'];
+      setState(() {});
+    });
 
-    verseJsonMapEnglish = jsonDecode(verseJsonEnglish);
-    verseMapEnglish = verseJsonMapEnglish['verses'];
+    await rootBundle
+        .loadString('assets/JSON/bhagvad_gita_hindi.json')
+        .then((value) {
+      verseJsonHindi = value;
+      verseJsonMapHindi = jsonDecode(verseJsonHindi);
+      verseMapHindi = verseJsonMapHindi['verses'];
+      setState(() {});
+    });
 
-    verseJsonHindi =
-        await rootBundle.loadString('assets/JSON/bhagvad_gita_hindi.json');
-
-    verseJsonMapHindi = jsonDecode(verseJsonHindi);
-    verseMapHindi = verseJsonMapHindi['verses'];
-    setState(() {});
+    print('English JSON loaded: $verseMapEnglish');
+    print('Hindi JSON loaded: $verseMapHindi');
   }
 
   @override
@@ -55,25 +62,34 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final chapter = args['chapter'] as Map<String, dynamic>;
-    final chapterNumber = args['chapterNumber'] as String;
-
+    final chapterNumber = args['chapterNumber'];
     chapterVersesEorG = (language == 'english')
-        ? verseMapEnglish[chapterNumber]
-        : verseMapHindi[chapterNumber];
-    print(language);
+        ? verseMapEnglish['$chapterNumber']
+        : verseMapHindi['$chapterNumber'];
+
+    print('chapter Number $chapterNumber');
+    print('=============');
+    print('${verseMapEnglish['$chapterNumber']}');
+    print('=============');
+    // print(verseJsonEnglish);
+    // print('=============');
+    // print(verseJsonMapEnglish);
+    // print('=============');
+    // print(verseMapEnglish);
+    print('=============');
+    print('Language: $language');
     return Scaffold(
       body: SafeArea(
         child: Container(
+          alignment: Alignment.center,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/bg.png'),
             ),
           ),
           child: (verseMapEnglish.isEmpty || verseMapHindi.isEmpty)
-              ? const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
+              ? const Center(
+                  child: CircularProgressIndicator(),
                 )
               : CustomScrollView(
                   slivers: [
