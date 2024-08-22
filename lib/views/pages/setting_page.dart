@@ -56,6 +56,52 @@ class _SettingPageState extends State<SettingPage> {
                 },
               ),
             ],
+          ),
+          Column(
+            children: [
+              Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.orangeAccent,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Theme',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
+              ),
+              RadioListTile(
+                activeColor: Colors.orangeAccent,
+                title: const Text('Light Theme'),
+                value: 'light',
+                groupValue: langPro.languageModel.language,
+                onChanged: (val) {
+                  langPro.languageChange(val);
+                },
+              ),
+              RadioListTile(
+                activeColor: Colors.orangeAccent,
+                title: const Text('Dark Theme'),
+                value: 'dark',
+                groupValue: langPro.languageModel.language,
+                onChanged: (val) {
+                  langPro.languageChange(val);
+                },
+              ),
+              RadioListTile(
+                activeColor: Colors.orangeAccent,
+                title: const Text('System Theme'),
+                value: 'system',
+                groupValue: langPro.languageModel.language,
+                onChanged: (val) {
+                  langPro.languageChange(val);
+                },
+              ),
+            ],
           )
         ],
       ),

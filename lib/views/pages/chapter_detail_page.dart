@@ -43,9 +43,6 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
       verseMapHindi = verseJsonMapHindi['verses'];
       setState(() {});
     });
-
-    print('English JSON loaded: $verseMapEnglish');
-    print('Hindi JSON loaded: $verseMapHindi');
   }
 
   @override
@@ -67,17 +64,6 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
         ? verseMapEnglish['$chapterNumber']
         : verseMapHindi['$chapterNumber'];
 
-    print('chapter Number $chapterNumber');
-    print('=============');
-    print('${verseMapEnglish['$chapterNumber']}');
-    print('=============');
-    // print(verseJsonEnglish);
-    // print('=============');
-    // print(verseJsonMapEnglish);
-    // print('=============');
-    // print(verseMapEnglish);
-    print('=============');
-    print('Language: $language');
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -175,7 +161,7 @@ class _ChapterDetailPageState extends State<ChapterDetailPage> {
                                     '${verse['verse_number']}',
                                     style: const TextStyle(fontSize: 25),
                                   ),
-                                  title: Text('${verse['meaning']}'),
+                                  title: Text('${verse['text']}'),
                                   onTap: () {
                                     Navigator.of(context).pushNamed(
                                         'verse_detail_page',
