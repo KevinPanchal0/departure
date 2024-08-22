@@ -1,4 +1,5 @@
 import 'package:departure/providers/language_provider.dart';
+import 'package:departure/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     final langPro = Provider.of<LanguageProvider>(context);
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -25,7 +27,7 @@ class _SettingPageState extends State<SettingPage> {
               Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.orangeAccent,
+                color: Colors.orangeAccent.shade100,
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -62,7 +64,7 @@ class _SettingPageState extends State<SettingPage> {
               Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.orangeAccent,
+                color: Colors.orangeAccent.shade100,
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
@@ -78,27 +80,27 @@ class _SettingPageState extends State<SettingPage> {
                 activeColor: Colors.orangeAccent,
                 title: const Text('Light Theme'),
                 value: 'light',
-                groupValue: langPro.languageModel.language,
+                groupValue: theme.themeModel.theme,
                 onChanged: (val) {
-                  langPro.languageChange(val);
+                  theme.themeToggle(val);
                 },
               ),
               RadioListTile(
                 activeColor: Colors.orangeAccent,
                 title: const Text('Dark Theme'),
                 value: 'dark',
-                groupValue: langPro.languageModel.language,
+                groupValue: theme.themeModel.theme,
                 onChanged: (val) {
-                  langPro.languageChange(val);
+                  theme.themeToggle(val);
                 },
               ),
               RadioListTile(
                 activeColor: Colors.orangeAccent,
                 title: const Text('System Theme'),
                 value: 'system',
-                groupValue: langPro.languageModel.language,
+                groupValue: theme.themeModel.theme,
                 onChanged: (val) {
-                  langPro.languageChange(val);
+                  theme.themeToggle(val);
                 },
               ),
             ],
