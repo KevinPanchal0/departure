@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/language_provider.dart';
@@ -22,25 +24,35 @@ class _HomePageState extends State<HomePage> {
 
   late String chaptersJsonEnglish;
 
-  Map<String, dynamic> chaptersJsonMapEnglish = {};
-  Map<String, dynamic> chapterMapEnglish = {};
+  Map chaptersJsonMapEnglish = {};
+  Map chapterMapEnglish = {};
 
   late String chaptersJsonHindi;
-  Map<String, dynamic> chaptersJsonMapHindi = {};
-  Map<String, dynamic> chapterMapHindi = {};
-
+  Map chaptersJsonMapHindi = {};
+  Map chapterMapHindi = {};
+  Map versesMap = {};
+  String? randomQuoteString;
   void loadJson() async {
     chaptersJsonEnglish =
         await rootBundle.loadString('assets/JSON/bhagvad_gita_english.json');
     chaptersJsonMapEnglish = jsonDecode(chaptersJsonEnglish);
     chapterMapEnglish = chaptersJsonMapEnglish['chapters'];
+    versesMap = chaptersJsonMapEnglish['verses'];
 
     chaptersJsonHindi =
         await rootBundle.loadString('assets/JSON/bhagvad_gita_hindi.json');
     chaptersJsonMapHindi = jsonDecode(chaptersJsonHindi);
     chapterMapHindi = chaptersJsonMapHindi['chapters'];
-
+    randomQuote();
     setState(() {});
+  }
+
+  void randomQuote() async {
+    int randomChapterNumber = Random().nextInt(18);
+    int index = randomChapterNumber;
+    // print(index);
+    // print(versesMap['$index']['1']['meaning']);
+    randomQuoteString = await versesMap['$index']['1']['meaning'];
   }
 
   @override
@@ -49,42 +61,86 @@ class _HomePageState extends State<HomePage> {
         Provider.of<LanguageProvider>(context).languageModel.language;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: (chapterMapEnglish.isEmpty || chapterMapHindi.isEmpty)
-          ? const Center(child: CircularProgressIndicator())
-          : CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.deepPurple,
-                  title: const Text(
-                    'Srimad Bhagwad Gita',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  actions: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('setting_page');
-                      },
-                      icon: const Icon(
-                        Icons.settings_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            title: const Text(
+              'Srimad Bhagwad Gita',
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('setting_page');
+                },
+                icon: const Icon(
+                  Icons.settings_outlined,
                 ),
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.all(18.0),
-                    child: Text(
-                      'Chapters',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Stack(
+              children: [
+                ColorFiltered(
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.multiply,
+                  ),
+                  child: Image.asset(
+                    'assets/images/krishna_bg.jpeg',
+                    width: MediaQuery.of(context).size.width,
+                    height: 200.h,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                SliverList(
+                (randomQuoteString == null)
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.orangeAccent,
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'VERSE OF THE DAY',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          SizedBox(
+                            height: 25.sp,
+                          ),
+                          Text(
+                            randomQuoteString!,
+                            style: Theme.of(context).textTheme.labelMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Text(
+              'Chapters',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          (chapterMapEnglish.isEmpty || chapterMapHindi.isEmpty)
+              ? SliverToBoxAdapter(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.orangeAccent,
+                      ),
+                    ),
+                  ),
+                )
+              : SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, i) {
                       final chapter = (language == 'english')
@@ -92,53 +148,11 @@ class _HomePageState extends State<HomePage> {
                           : chapterMapHindi['${i + 1}'];
 
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          leading: Container(
-                            alignment: Alignment.center,
-                            height: 25,
-                            width: 25,
-                            color: Colors.red.shade100,
-                            child: Text(
-                              "${chapter['chapter_number']}",
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            "${chapter['name']}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              const Icon(
-                                Icons.list,
-                                size: 20,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "${chapter['verses_count']}",
-                              ),
-                            ],
-                          ),
-                          trailing: IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(
-                                'detail_page',
-                                arguments: {
-                                  'chapter': chapter,
-                                  'chapterNumber': chapter['chapter_number'],
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.chevron_right),
-                          ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0,
+                          vertical: 4.0,
+                        ),
+                        child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).pushNamed(
                               'detail_page',
@@ -154,6 +168,62 @@ class _HomePageState extends State<HomePage> {
                               },
                             );
                           },
+                          child: Card(
+                            elevation: 10,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    height: 25.h,
+                                    width: 25.h,
+                                    color: Colors.red.shade100,
+                                    child: Text(
+                                      "${chapter['chapter_number']}",
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 25.w,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${chapter['name']}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.list,
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "${chapter['verses_count']}",
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     },
@@ -162,8 +232,8 @@ class _HomePageState extends State<HomePage> {
                         : chapterMapHindi.length,
                   ),
                 ),
-              ],
-            ),
+        ],
+      ),
     );
   }
 }
