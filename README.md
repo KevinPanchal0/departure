@@ -26,9 +26,7 @@ explore and engage with this sacred text.
 
 ## Features
 - **Local JSON Bank:** Efficiently store and retrieve Bhagavad Gita verses locally for quick offline access.
-- **Like/Bookmark Verses:** Allow users to bookmark favorite verses, saving preferences in local storage for easy reference.
 - **Light & Dark Themes:** Offer customizable light and dark themes for comfortable reading in different lighting conditions.
-- **Images for Chapters:** Display relevant images alongside verses to enhance understanding and visual appeal.
 - **Splash Screen:** Feature a captivating splash screen with the app logo or a motivational quote to welcome users.
 - **Detail Screen for Verses:** Provide a dedicated screen for in-depth explanations and interpretations of each verse.
 - **Multi-language Support:** Enable users to read and study the Bhagavad Gita in their preferred language.
