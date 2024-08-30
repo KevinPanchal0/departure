@@ -1,4 +1,4 @@
-# Depature(Bhagvad Gita App)
+# Departure(Bhagvad Gita App)
 
 The "Departure" app aims to create an immersive and personalized experience for users seeking
 spiritual guidance through the teachings of the Bhagvat Geeta. By incorporating local JSON
