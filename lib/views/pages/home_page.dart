@@ -37,17 +37,17 @@ class _HomePageState extends State<HomePage> {
         await rootBundle.loadString('assets/JSON/bhagvad_gita_english.json');
     chaptersJsonMapEnglish = jsonDecode(chaptersJsonEnglish);
     chapterMapEnglish = chaptersJsonMapEnglish['chapters'];
-    versesMap = chaptersJsonMapEnglish['verses'];
+    versesMap = await chaptersJsonMapEnglish['verses'];
 
     chaptersJsonHindi =
         await rootBundle.loadString('assets/JSON/bhagvad_gita_hindi.json');
     chaptersJsonMapHindi = jsonDecode(chaptersJsonHindi);
-    chapterMapHindi = chaptersJsonMapHindi['chapters'];
-    randomQuote();
+    chapterMapHindi = await chaptersJsonMapHindi['chapters'];
+    await randomQuote();
     setState(() {});
   }
 
-  void randomQuote() async {
+  Future<void> randomQuote() async {
     int randomChapterNumber = Random().nextInt(18);
     int index = randomChapterNumber;
     // print(index);
@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   child: Image.asset(
                     'assets/images/krishna_bg.jpeg',
                     width: MediaQuery.of(context).size.width,
-                    height: 200.h,
+                    height: 230.h,
                     fit: BoxFit.cover,
                   ),
                 ),

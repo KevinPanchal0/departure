@@ -2,6 +2,7 @@ import 'package:departure/providers/language_provider.dart';
 import 'package:departure/providers/theme_provider.dart';
 import 'package:departure/utils/theme.dart';
 import 'package:departure/views/pages/chapter_detail_page.dart';
+import 'package:departure/views/pages/onboarding_screen.dart';
 import 'package:departure/views/pages/setting_page.dart';
 import 'package:departure/views/pages/splash_screen.dart';
 import 'package:departure/views/pages/verse_detail_page.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const HomePage(),
           'splash_screen': (context) => const SplashScreen(),
+          'onboarding': (context) => const OnboardingScreen(),
           'detail_page': (context) => const ChapterDetailPage(),
           'verse_detail_page': (context) => const VerseDetailPage(),
           'setting_page': (context) => const SettingPage(),

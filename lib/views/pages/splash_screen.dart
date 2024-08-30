@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,10 +15,18 @@ class _SplashScreenState extends State<SplashScreen> {
     loadNewPage();
   }
 
-  void loadNewPage() {
-    Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacementNamed('/');
-    });
+  void loadNewPage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool? isIntroScreenVisited =
+        prefs.getBool("isSplashScreenVisited") ?? false;
+    (isIntroScreenVisited)
+        ? Future.delayed(const Duration(seconds: 5), () {
+            Navigator.of(context).pushReplacementNamed('/');
+          })
+        : Future.delayed(const Duration(seconds: 5), () {
+            Navigator.of(context).pushReplacementNamed('onboarding');
+          });
   }
 
   @override
